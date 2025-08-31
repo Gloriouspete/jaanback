@@ -1,0 +1,25 @@
+import { Router } from 'express';
+const router = Router();
+import * as Controller from "../controllers/index.ts";
+import { validateEmail,validateEmailCode, validateLogin, validatePassword, validatePin, validatePinAndPass, validateReference } from "../validators/index.ts";
+import authenticateJWT from '../middleware/auth.ts';
+router.use(authenticateJWT);
+router.get("/users", Controller.getAllUsers);
+router.get("/details", Controller.getUserDetail);
+router.get("/transactions", Controller.getUserTransactions);
+router.post("/transactions/reference",validateReference, Controller.getTransactionReference);
+router.post("/signup/email", validateEmail, Controller.createUserByEmail);
+router.post("/signup/kyc", Controller.setUserKyc);
+router.post("/signup/pin",validatePin, Controller.setUserPin);
+router.post("/auth/password",validatePassword, Controller.setUserPassword);
+router.post("/auth/checkcode", validateEmailCode, Controller.checkEmailCode);
+router.get("/signup/emailcode/resend", Controller.ResendEmailCode);
+router.post("/login",validateLogin, Controller.UserLogin);
+router.post("/login/checkcode",validateEmailCode, Controller.checkLoginCode);
+router.get("/login/resendcode", Controller.ResendLoginCode);
+router.post("/auth/updatepin",validatePinAndPass, Controller.UpdateUserPin);
+router.post("/auth/forgot",validateEmail, Controller.ResetPassword);
+router.get("/notification/fetch", Controller.getUserNotifications);
+router.post("/notification/update", Controller.updateUserNotification);
+
+export default router;
